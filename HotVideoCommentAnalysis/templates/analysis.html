@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>B站视频热评分析</title>
+    <meta content="" name="descriptison">
+    <meta content="" name="keywords">
+    <script src="../static/assets/js/echarts.min.js"></script>
+    <!-- Favicons -->
+    <link href="static/assets/img/favicon.png" rel="icon">
+    <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+    <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="static/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="static/assets/vendor/venobox/venobox.css" rel="stylesheet">
+    <link href="static/assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="../static/assets/css/bootstrap-table.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="static/assets/css/style.css" rel="stylesheet">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../static/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet" href="../static/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="../static/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="../static/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../static/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="../static/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="../static/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    <link rel="stylesheet" href="../static/plugins/summernote/summernote-bs4.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- =======================================================
+    * Template Name: Tempo - v2.1.0
+    * Template URL: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+        <h1 class="logo mr-auto"><a href="/index">逗鹅冤</a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html" class="logo mr-auto"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+        <nav class="nav-menu d-none d-lg-block">
+            <ul>
+                <li class="active"><a href="/index">首页</a></li>
+                <li><a href="/comment">热评一览</a></li>
+                <li><a href="/analysis">用户分析</a></li>
+                <li><a href="/wordcloud">热评词云</a></li>
+                <li><a href="/team">团队</a></li>
+            </ul>
+        </nav><!-- .nav-menu -->
+
+    </div>
+</header><!-- End Header -->
+
+<!-- ======= Hero Section ======= -->
+<section id="hero">
+    <div class="hero-container">
+        {#      <h3>Welcome to <strong>Tempo</strong></h3>#}
+        {#      <h1>We're Creative Agency</h1>#}
+        {#      <h2>We are team of talanted designers making websites with Bootstrap</h2>#}
+        {#      <a href="#about" class="btn-get-started scrollto">Get Started</a>#}
+    </div>
+</section><!-- End Hero -->
+<style>
+    #hero {
+        width: 100%;
+        height: 10vh;
+        background: url("../static/assets/img/comment_bg.png") top center;
+        background-size: cover;
+        position: relative;
+    }
+</style>
+<main id="main">
+    <!-- Main content -->
+    <section class="content">
+        <div class="section-title">
+            <h2>数据分析</h2>
+            <h3>有趣的<span>数据</span></h3>
+        </div>
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-7 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-pie mr-1"></i>
+                                Counts
+                            </h3>
+                            <div class="card-tools">
+                                <ul class="nav nav-pills ml-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div><!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="tab-content p-0">
+                                <!-- Morris chart - Sales -->
+                                <div class="chart tab-pane active" id="echarts1"
+                                     style="position: relative;  height: 300px;">
+                                </div>
+                            </div>
+                        </div><!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+                    <!-- DIRECT CHAT -->
+                    <div class="card direct-chat direct-chat-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">24小时内各时段评论数</h3>
+
+                            <div class="card-tools">
+                                <span data-toggle="tooltip" title="3 New Messages" class="badge badge-primary">3</span>
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts"
+                                        data-widget="chat-pane-toggle">
+                                    <i class="fas fa-comments"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove"><i
+                                        class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <!-- Conversations are loaded here -->
+
+
+                            <div id="echarts3" style="height: 350px"></div>
+                            <!-- /.direct-chat-pane -->
+                        </div>
+                    </div>
+                    <!--/.direct-chat -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="ion ion-clipboard mr-1"></i>
+                                会员情况统计
+                            </h3>
+
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="echarts5" style="height: 350px"></div>
+                        </div>
+                        <!-- /.card-body -->
+
+                    </div>
+                    <!-- /.card -->
+                </section>
+
+                <!-- /.Left col -->
+                <!-- right col (We are only adding the ID to make the widgets sortable)-->
+                <section class="col-lg-5 connectedSortable">
+
+                    <!-- Map card -->
+                    <div class="card bg-gradient-primary">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                Visitors
+                            </h3>
+                            <!-- card tools -->
+                            <div class="card-tools">
+                                <button type="button"
+                                        class="btn btn-primary btn-sm daterange"
+                                        data-toggle="tooltip"
+                                        title="Date range">
+                                    <i class="far fa-calendar-alt"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-primary btn-sm"
+                                        data-card-widget="collapse"
+                                        data-toggle="tooltip"
+                                        title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <div class="card-body" id="echarts2" style="height: 400px;background-color: white">
+
+                        </div>
+                        <!-- /.card-body-->
+
+                    </div>
+                    <!-- /.card -->
+
+                    <!-- solid sales graph -->
+                    <div class="card bg-gradient-info">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">
+                                <i class="fas fa-th mr-1"></i>
+                                评论区账号等级分布
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="echarts4" style="height: 400px;background-color: white"></div>
+                    </div>
+                    <!-- /.card -->
+
+                </section>
+                <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+
+
+    <div class="container d-md-flex py-4">
+
+        <div class="mr-md-auto text-center text-md-left">
+            <div class="copyright">
+                &copy; Copyright <strong><span>Tempo</span></strong>. All Rights Reserved
+            </div>
+            <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/ -->
+                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
+        <div class="social-links text-center text-md-right pt-3 pt-md-0">
+            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+        </div>
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top"><i class="ri-arrow-up-line"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="static/assets/vendor/jquery/jquery.min.js"></script>
+<script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+<script src="static/assets/vendor/php-email-form/validate.js"></script>
+<script src="static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="static/assets/vendor/venobox/venobox.min.js"></script>
+<script src="static/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+<script src="../static/assets/js/bootstrap-table.js"></script>
+<!-- Template Main JS File -->
+<script src="static/assets/js/main.js"></script>
+<!-- jQuery -->
+<script src="../static/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../static/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="../static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="../static/plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+<script src="../static/plugins/sparklines/sparkline.js"></script>
+<!-- JQVMap -->
+<script src="../static/plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="../static/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="../static/plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="../static/plugins/moment/moment.min.js"></script>
+<script src="../static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="../static/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="../static/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="../static/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../static/dist/js/adminlte.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../static/dist/js/pages/dashboard.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/dist/js/demo.js"></script>
+
+<script type="text/javascript">
+    var mygoodlist = []
+    {% for item in account %}
+        mygoodlist.push("{{ item }}")
+    {% endfor %}
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('echarts1'));
+    option = {
+        title: {
+            text: '官方热评点赞量前十',
+            subtext: '最热官方',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            {#data: mygoodlist#}
+        },
+        series: [
+            {
+                name: '点赞量',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: [
+                    {value: {{ num[0] }}, name: mygoodlist[0]},
+                    {value: {{ num[1] }}, name: mygoodlist[1]},
+                    {value: {{ num[2] }}, name: mygoodlist[2]},
+                    {value: {{ num[3] }}, name: mygoodlist[3]},
+                    {value: {{ num[4] }}, name: mygoodlist[4]},
+                    {value: {{ num[5] }}, name: mygoodlist[5]},
+                    {value: {{ num[6] }}, name: mygoodlist[6]},
+                    {value: {{ num[7] }}, name: mygoodlist[7]},
+                    {value: {{ num[8] }}, name: mygoodlist[8]},
+                    {value: {{ num[9] }}, name: mygoodlist[9]},
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+</script>
+
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    userlist = []
+    {% for item in users %}
+        userlist.push("{{ item }}")
+    {% endfor %}
+    var myChart = echarts.init(document.getElementById('echarts2'));
+    var dataAxis = userlist;
+    var data = {{user_num}};
+    var yMax = 5;
+    var dataShadow = [];
+
+    for (var i = 0; i < data.length; i++) {
+        dataShadow.push(yMax);
+    }
+
+    option = {
+        title: {
+            text: '热评榜前十名',
+            subtext: '鼠标滚轮可缩放'
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: this.dataAxis,
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLabel: {
+                    interval: 0,
+                    formatter: function (value) {
+                        //return value.split("").join("\n");
+                        //debugger
+                        var ret = "";//拼接加\n返回的类目项
+                        var maxLength = 3;//每项显示文字个数
+                        var valLength = value.length;//X轴类目项的文字个数
+                        var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
+                        if (rowN > 1)//如果类目项的文字大于3,
+                        {
+                            for (var i = 0; i < rowN; i++) {
+                                var temp = "";//每次截取的字符串
+                                var start = i * maxLength;//开始截取的位置
+                                var end = start + maxLength;//结束截取的位置
+                                //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧
+                                temp = value.substring(start, end) + '\n';
+                                ret += temp; //凭借最终的字符串
+                            }
+                            return ret;
+                        } else {
+                            return value;
+                        }
+                    }
+                }
+            }
+        ],
+        yAxis: {
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                textStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        dataZoom: [
+            {
+                type: 'inside'
+            }
+        ],
+        series: [
+            { // For shadow
+                type: 'bar',
+                itemStyle: {
+                    color: 'rgba(0,0,0,0.05)'
+                },
+                barGap: '-100%',
+                barCategoryGap: '50%',
+                data: dataShadow,
+                animation: false
+            },
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#83bff6'},
+                            {offset: 0.5, color: '#188df0'},
+                            {offset: 1, color: '#188df0'}
+                        ]
+                    )
+                },
+                emphasis: {
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(
+                            0, 0, 0, 1,
+                            [
+                                {offset: 0, color: '#2378f7'},
+                                {offset: 0.7, color: '#2378f7'},
+                                {offset: 1, color: '#83bff6'}
+                            ]
+                        )
+                    }
+                },
+                data: data
+            }
+        ]
+    };
+
+    // Enable data zoom when user click bar.
+    var zoomSize = 6;
+    myChart.on('click', function (params) {
+        console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+        myChart.dispatchAction({
+            type: 'dataZoom',
+            startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+            endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+        });
+    });
+    myChart.setOption(option);
+</script>
+
+
+<script type="text/javascript">
+    var comment_list = []
+    {% for item in comment_time %}
+        comment_list.push("{{ item }}")
+    {% endfor %}
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('echarts3'));
+    // Generate data
+
+
+    // option
+    option = {
+
+        backgroundColor: '#0f375f',
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['line', 'bar'],
+            textStyle: {
+                color: '#ccc'
+            }
+        },
+        xAxis: {
+            data: comment_list,
+            axisLine: {
+                lineStyle: {
+                    color: '#ccc'
+                }
+            }
+        },
+        yAxis: {
+            splitLine: {show: false},
+            axisLine: {
+                lineStyle: {
+                    color: '#ccc'
+                }
+            }
+        },
+        series: [{
+            name: '评论数量',
+            type: 'line',
+            smooth: true,
+            showAllSymbol: true,
+            symbol: 'emptyCircle',
+            symbolSize: 15,
+            data: {{comment_num}}
+        }, {
+            name: '评论数',
+            type: 'bar',
+            barWidth: 10,
+            itemStyle: {
+                barBorderRadius: 5,
+                color: new echarts.graphic.LinearGradient(
+                    0, 0, 0, 1,
+                    [
+                        {offset: 0, color: '#14c8d4'},
+                        {offset: 1, color: '#43eec6'}
+                    ]
+                )
+            },
+            data: {{ comment_num }}
+        }]
+    };
+    myChart.setOption(option);
+</script>
+
+
+<script type="text/javascript">
+
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('echarts4'));
+    option = {
+
+        tooltip: {},
+        legend: {
+            data: ['账号等级分布']
+        },
+        radar: {
+            // shape: 'circle',
+            name: {
+                textStyle: {
+                    color: '#fff',
+                    backgroundColor: '#999',
+                    borderRadius: 3,
+                    padding: [3, 5]
+                }
+            },
+            indicator: [
+                {name: '1级号', max: 5000},
+                {name: '2级号', max: 5000},
+                {name: '3级号', max: 5000},
+                {name: '4级号', max: 5000},
+                {name: '5级号', max: 5000},
+                {name: '6级号', max: 5000}
+            ]
+        },
+        series: [{
+            type: 'radar',
+            // areaStyle: {normal: {}},
+            data: [
+                {
+                    value: {{ level_num }},
+                    name: '账号等级分布'
+                },
+            ]
+        }]
+    };
+    myChart.setOption(option);
+</script>
+
+<script type="text/javascript">
+
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('echarts5'));
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 10,
+            data: ['普通用户', '十年大会员', '大会员', '年度大会员']
+        },
+        series: [
+            {
+                name: '用户数量',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    {value: {{vip_num[0]}}, name: '普通用户'},
+                    {value: {{vip_num[1]}}, name: '十年大会员'},
+                    {value: {{vip_num[2]}}, name: '大会员'},
+                    {value: {{vip_num[3]}}, name: '年度大会员'},
+                ]
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+</script>
+
+
+</body>
+
+</html>

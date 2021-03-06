@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>B站视频热评分析</title>
+    <meta content="" name="descriptison">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="static/assets/img/favicon.png" rel="icon">
+    <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+    <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="static/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="static/assets/vendor/venobox/venobox.css" rel="stylesheet">
+    <link href="static/assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="../static/assets/css/bootstrap-table.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="static/assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2047918_1wdc5y3mwaj.css">
+
+    <!-- =======================================================
+    * Template Name: Tempo - v2.1.0
+    * Template URL: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+        <h1 class="logo mr-auto"><a href="/index">逗鹅冤</a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html" class="logo mr-auto"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+        <nav class="nav-menu d-none d-lg-block">
+            <ul>
+                <li class="active"><a href="/index">首页</a></li>
+                <li><a href="/comment">热评一览</a></li>
+                <li><a href="/analysis">用户分析</a></li>
+                <li><a href="/wordcloud">热评词云</a></li>
+                <li><a href="/team">团队</a></li>
+            </ul>
+        </nav><!-- .nav-menu -->
+
+    </div>
+</header><!-- End Header -->
+
+<!-- ======= Hero Section ======= -->
+<section id="hero">
+    <div class="hero-container">
+        {#      <h3>Welcome to <strong>Tempo</strong></h3>#}
+        {#      <h1>We're Creative Agency</h1>#}
+        {#      <h2>We are team of talanted designers making websites with Bootstrap</h2>#}
+        {#      <a href="#about" class="btn-get-started scrollto">Get Started</a>#}
+    </div>
+</section><!-- End Hero -->
+<style>
+    #hero {
+        width: 100%;
+        height: 10vh;
+        background: url("../static/assets/img/comment_bg.png") top center;
+        background-size: cover;
+        position: relative;
+    }
+    #likenume {
+        position: relative;
+    }
+    #click-icon {
+        position: absolute;
+        display: inline-block;
+        right: 0;
+        top: 10px;
+        font-size: 20px;
+        color: #e43c5c;
+        cursor: pointer;
+    }
+    #comment-table {
+        box-shadow: 1px 1px 5px rgba(0,0,0,.5);
+        border-radius: 15px;
+    }
+    #searchBtnGroup {
+        margin-bottom: 25px;
+    }
+    #comment-table tbody tr td {
+        min-width: 40px;
+    }
+</style>
+<main id="main">
+
+
+    <!-- ======= Pricing Section ======= -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>热评一览</h2>
+                <h3>神奇的 <span>评论区</span></h3>
+            </div>
+
+            <!--搜索区-->
+            <div class="row" style="text-align: right" id="searchBtnGroup">
+                <div class="input-group mb-3 col-3">
+                    <input type="text" class="form-control" placeholder="按用户名搜索" aria-label="Recipient's username"
+                           aria-describedby="button-addon2" id="key_input">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                onclick="getResult(document.getElementById('key_input').value)">搜索
+                        </button>
+                    </div>
+                </div>
+                <div class="input-group mb-3 col-3">
+                    <input type="text" class="form-control" placeholder="按评论内容搜索" aria-label="Recipient's username"
+                           aria-describedby="button-addon2" id="content_input">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                onclick="getContent(document.getElementById('content_input').value)">搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        <!--表格主体-->
+            <table id="comment-table" class="table table-striped" width="100%">
+            <thead>
+                <tr>
+                    <td>序号</td>
+                    <td id="username">用户名</td>
+                    <td id="vip">会员</td>
+
+                    <td id="comment">评论内容</td>
+                    <td id="ctime">评论时间</td>
+                    <td id="likenume">点赞量 <i id="click-icon" class="iconfont icon-jiangxu1" onclick="tablesort('comment-table',5)"></i> </td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                    <tr style="display: none">
+                        <td>{{ comment[0] }}</td>
+                        <td>{{ comment[1] }}</td>
+                        <td>{{ comment[2] }}</td>
+                        <td>{{ comment[3] }}</td>
+                        <td>{{ comment[4] }}</td>
+                        <td>{{ comment[5] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            <a id="btn0"></a>
+            <input id="pageSize" type="text" size="1" maxlength="2" value="getDefaultValue()"/><a> 条 </a> <a
+                href="#" id="pageSizeSet">设置</a>&nbsp;
+            <a id="sjzl"></a>&nbsp;
+            <a href="#" id="btn1">首页</a>
+            <a href="#" id="btn2">上一页</a>
+            <a href="#" id="btn3">下一页</a>
+            <a href="#" id="btn4">尾页</a>&nbsp;
+            <a>转到&nbsp;</a>
+            <input id="changePage" type="text" size="1" maxlength="4"/>
+            <a>页&nbsp;</a>
+            <a href="#" id="btn5">跳转</a>
+
+        </div>
+    </section><!-- End Pricing Section -->
+
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+
+
+    <div class="container d-md-flex py-4">
+
+        <div class="mr-md-auto text-center text-md-left">
+            <div class="copyright">
+                &copy; Copyright <strong><span>Tempo</span></strong>. All Rights Reserved
+            </div>
+            <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/ -->
+                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
+        <div class="social-links text-center text-md-right pt-3 pt-md-0">
+            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+        </div>
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top"><i class="ri-arrow-up-line"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="static/assets/vendor/jquery/jquery.min.js"></script>
+<script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+<script src="static/assets/vendor/php-email-form/validate.js"></script>
+<script src="static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="static/assets/vendor/venobox/venobox.min.js"></script>
+<script src="static/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+<script src="../static/assets/js/bootstrap-table.js"></script>
+<!-- Template Main JS File -->
+<script src="static/assets/js/main.js"></script>
+
+
+<!--分页功能-->
+<script type="text/javascript">
+    var pageSize = 25;    //每页显示的记录条数
+    var curPage = 0;        //当前页
+    var lastPage;        //最后页
+    var direct = 0;        //方向
+    var len;            //总行数
+    var page;            //总页数
+    var begin;
+    var end;
+
+    $(document).ready(function display() {
+        len = $("#comment-table tr").length - 1;    // 求这个表的总行数，剔除第一行介绍
+        page = len % pageSize == 0 ? len / pageSize : Math.floor(len / pageSize) + 1;//根据记录条数，计算页数
+        // alert("page==="+page);
+        curPage = 1;    // 设置当前为第一页
+        displayPage(1);//显示第一页
+
+        document.getElementById("btn0").innerHTML = "当前 " + curPage + "/" + page + " 页    每页 ";    // 显示当前多少页
+        document.getElementById("sjzl").innerHTML = "数据总量 " + len + "";        // 显示数据量
+        document.getElementById("pageSize").value = pageSize;
+
+
+        $("#btn1").click(function firstPage() {    // 首页
+            curPage = 1;
+            direct = 0;
+            displayPage();
+        });
+        $("#btn2").click(function frontPage() {    // 上一页
+            direct = -1;
+            displayPage();
+        });
+        $("#btn3").click(function nextPage() {    // 下一页
+            direct = 1;
+            displayPage();
+        });
+        $("#btn4").click(function lastPage() {    // 尾页
+            curPage = page;
+            direct = 0;
+            displayPage();
+        });
+        $("#btn5").click(function changePage() {    // 转页
+            curPage = document.getElementById("changePage").value * 1;
+            if (!/^[1-9]\d*$/.test(curPage)) {
+                alert("请输入正整数");
+                return;
+            }
+            if (curPage > page) {
+                alert("超出数据页面");
+                return;
+            }
+            direct = 0;
+            displayPage();
+        });
+
+
+        $("#pageSizeSet").click(function setPageSize() {    // 设置每页显示多少条记录
+            pageSize = document.getElementById("pageSize").value;    //每页显示的记录条数
+            if (!/^[1-9]\d*$/.test(pageSize)) {
+                alert("请输入正整数");
+                return;
+            }
+            len = $("#comment-table tr").length - 1;
+            page = len % pageSize == 0 ? len / pageSize : Math.floor(len / pageSize) + 1;//根据记录条数，计算页数
+            curPage = 1;        //当前页
+            direct = 0;        //方向
+            firstPage();
+        });
+    });
+
+    function displayPage() {
+        if (curPage <= 1 && direct == -1) {
+            direct = 0;
+            alert("已经是第一页了");
+            return;
+        } else if (curPage >= page && direct == 1) {
+            direct = 0;
+            alert("已经是最后一页了");
+            return;
+        }
+
+        lastPage = curPage;
+
+        // 修复当len=1时，curPage计算得0的bug
+        if (len > pageSize) {
+            curPage = ((curPage + direct + len) % len);
+        } else {
+            curPage = 1;
+        }
+
+
+        document.getElementById("btn0").innerHTML = "当前 " + curPage + "/" + page + " 页    每页 ";        // 显示当前多少页
+
+        begin = (curPage - 1) * pageSize + 1;// 起始记录号
+        end = begin + 1 * pageSize - 1;    // 末尾记录号
+
+
+        if (end > len) end = len;
+        $("#comment-table tr").hide();    // 首先，设置这行为隐藏
+        $("#comment-table tr").each(function (i) {    // 然后，通过条件判断决定本行是否恢复显示
+            if ((i >= begin && i <= end) || i == 0)//显示begin<=x<=end的记录
+                $(this).show();
+
+        });
+
+    }
+</script>
+
+<!--搜索功能-->
+<script type="text/javascript">
+    function getResult(key) {
+        if (key == "")
+            return
+        var storeId = document.getElementById('comment-table');//获取table的id标识
+        var rowsLength = storeId.rows.length;//表格总共有多少行
+        var searchCol = 1;//要搜索的哪一列，这里是第一列，从0开始数起
+        for (var i = 1; i < rowsLength; i++) {//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）
+
+            var searchText = storeId.rows[i].cells[searchCol].innerHTML;//取得table行，列的值
+            console.log(searchText);
+            if (searchText.match(key) || searchText.toUpperCase().match(key.toUpperCase())) {//用match函数进行筛选，如果input的值，即变量 key的值为空，返回的是ture，
+                storeId.rows[i].style.display = "";//显示行操作，
+            } else {
+                storeId.rows[i].style.display = 'none';//隐藏行操作
+            }
+        }
+        document.getElementById('key_input').value = "";
+    }
+</script>
+
+<script type="text/javascript">
+    function getContent(key) {
+        if (key == "")
+            return
+        var storeId = document.getElementById('comment-table');//获取table的id标识
+        var rowsLength = storeId.rows.length;//表格总共有多少行
+        var searchCol = 3;//要搜索的哪一列，这里是第一列，从0开始数起
+        for (var i = 1; i < rowsLength; i++) {//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）
+
+            var searchText = storeId.rows[i].cells[searchCol].innerHTML;//取得table行，列的值
+            console.log(searchText);
+            if (searchText.match(key) || searchText.toUpperCase().match(key.toUpperCase())) {//用match函数进行筛选，如果input的值，即变量 key的值为空，返回的是ture，
+                storeId.rows[i].style.display = "";//显示行操作，
+            } else {
+                storeId.rows[i].style.display = 'none';//隐藏行操作
+            }
+        }
+        document.getElementById('content_input').value = "";
+    }
+</script>
+
+
+<!--降序排列-->
+<script type="text/javascript">
+var Sortcol=-1;
+var Sort_flg=[true,true,true,true,true];
+function tablesort(tableid,colidx){
+    var table=document.getElementById(tableid);
+    var table_tbody=table.getElementsByTagName("tbody")[0];
+    var table_tr=table_tbody.getElementsByTagName("tr");  //取得表格的数据行数
+
+    //把表格的各行数据存入临时数组，并进行排序
+    Sortcol = colidx;
+    var tmp_tr_array=new Array();
+    for(var cnt=0;cnt<table_tr.length;cnt++){
+        tmp_tr_array.push(table_tr[cnt]);
+    }
+    tmp_tr_array.sort(sortfunc);
+
+    //生成一个排好序的文档碎片
+    var fragment = document.createDocumentFragment();
+    for(var cnt=0;cnt<tmp_tr_array.length;cnt++){
+        fragment.appendChild(tmp_tr_array[cnt]);  //该方法调用后，页面上的原表格中的此行将消失不见
+    }
+    //至此，页面上的原表格只剩下表头
+
+    //把排好序的文档碎片接入原表格，排序完毕
+    table_tbody.appendChild(fragment);
+    alert("降序排列完成！");
+
+}
+
+function sortfunc(a,b){
+    var value1 = a.getElementsByTagName("td")[Sortcol].innerHTML;
+    var value2 = b.getElementsByTagName("td")[Sortcol].innerHTML;
+
+
+    if(Sort_flg[Sortcol]){
+    //升序排列
+        if(isNaN(value1)){
+            return value1.localeCompare(value2);  //字符串比较
+        }else{
+            return Number(value1)-Number(value2); //数值比较
+        }
+    }else{
+    //降序排列
+        if(isNaN(value1)){
+            return value2.localeCompare(value1);
+        }else{
+            return Number(value2)-Number(value1);
+        }
+    }
+}
+</script>
+</body>
+
+</html>
